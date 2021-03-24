@@ -4,6 +4,8 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {Appbar} from 'react-native-paper';
 import LandingScreen from './Screens/Landing';
 import HomeScreen from './Screens/Home';
+import ChatScreen from './Screens/ChatScreen';
+import EducatorsScreen from './Screens/EducatorsScreen';
 import TagDetailScreen from './Screens/TagDetail';
 import NdefTypeListScreen from './Screens/NdefTypeList';
 import NdefWriteScreen from './Screens/NdefWrite';
@@ -12,6 +14,7 @@ import CustomTransceiveScreen from './Screens/CustomTransceive';
 import SettingsScreen from './Screens/Settings';
 import SavedRecordScreen from './Screens/SavedRecord';
 import NfcPromptAndroid from './Components/NfcPromptAndroid';
+import { View } from 'react-native';
 
 const MainStack = createStackNavigator();
 
@@ -100,7 +103,7 @@ function Settings(props) {
       }}>
       <SettingsStack.Screen
         name="Settings"
-        options={{title: 'Settings'}}
+        options={{title: 'Settings', header: () => null}}
         component={SettingsScreen}
       />
     </SettingsStack.Navigator>
@@ -112,8 +115,10 @@ const RootStack = createStackNavigator();
 function Root(props) {
   return (
     <RootStack.Navigator headerMode="none" mode="modal">
-      <RootStack.Screen name="Landing" component={LandingScreen} />
+      {/* <RootStack.Screen name="Landing" component={LandingScreen} /> */}
+      <RootStack.Screen name="EducatorsScreen" component={EducatorsScreen} />
       <RootStack.Screen name="Settings" component={Settings} />
+      <RootStack.Screen name="ChatScreen" component={ChatScreen} />
       <RootStack.Screen
         name="Main"
         component={Main}
