@@ -1,11 +1,13 @@
+/*eslint-disable*/
 import React, {useEffect, useState} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import NfcManager, {NfcTech} from 'react-native-nfc-manager';
-import {Button} from 'react-native-paper';
+import {Appbar, Button} from 'react-native-paper';
+import styles from './styles';
 
 const ReadingsScreen = ({navigation, route}) => {
   const NUMBER = 95;
-  //setup
+
   const [isNfcReady, setIsNfcReady] = useState(false);
   const [isReading, setIsReading] = useState(false);
   const [readingComplete, setReadingComplete] = useState(false);
@@ -46,6 +48,22 @@ const ReadingsScreen = ({navigation, route}) => {
     }
   }, [progress]);
 
+  const sendMessage = () => {
+    const messageId = '54863612-8cc7-11eb-8dcd-0242ac130003';
+    const textToSend = `تم تسجيل قراءة: mg/dL ${NUMBER} `;
+    const messageToSend = [
+      {
+        _id: messageId,
+        createdAt: new Date(),
+        user: {
+          _id: 1,
+        },
+        text: textToSend,
+      },
+    ];
+    navigation.navigate('ChatScreen', {propmessage: messageToSend});
+  };
+
   const readTag = async () => {
     let tag = null;
     try {
@@ -65,8 +83,17 @@ const ReadingsScreen = ({navigation, route}) => {
     return tag;
   };
 
-  // console.log('isReading', isReading);
-  // console.log('calculating', calculating);
+  console.log('isReading', isReading);
+  console.log('calculating', calculating);
+  const renderHeader = () => {
+    const title = 'إضافة قراءة';
+    return (
+      <Appbar.Header style={{backgroundColor: '#042c42'}}>
+        <Appbar.BackAction onPress={() => navigation.goBack()} />
+        <Appbar.Content title={title} titleStyle={{textAlign: 'center'}} />
+    </Appbar.Header>
+    );
+  };
 
   const renderResult = () => {
     return (
@@ -107,8 +134,8 @@ const ReadingsScreen = ({navigation, route}) => {
         <View style={{alignItems: 'center'}}>
           <Button
             mode="contained"
-            style={{width: 250, marginTop: 100, padding: 10, borderRadius: 10}}
-            onPress={() => console.log('yoo')}>
+            style={{width: 250, marginTop: 100, padding: 10, borderRadius: 10, backgroundColor: '#042c42'}}
+            onPress={() => sendMessage()}>
             <Text style={{fontSize: 20}}>{'إرسال إلى المختص'}</Text>
           </Button>
         </View>
@@ -133,6 +160,7 @@ const ReadingsScreen = ({navigation, route}) => {
 
   return (
     <View style={{backgroundColor: 'white', flex: 1}}>
+      {renderHeader()}
       {readingComplete && calculating ? ( //readingComplete && calculating
         renderCalculating()
       ) : readingComplete && !calculating && result ? (
@@ -154,38 +182,3 @@ const ReadingsScreen = ({navigation, route}) => {
 };
 
 export default ReadingsScreen;
-
-const styles = StyleSheet.create({
-  circle: {
-    marginTop: 80,
-    borderWidth: 1,
-    borderRadius: 300,
-    borderColor: '#ccc',
-    backgroundColor: '#FFF2F2',
-    width: 300,
-    height: 300,
-    alignItems: 'center',
-    justifyContent: 'center',
-    // shadowColor: "#000",
-  // shadowOffset: {
-  //   width: 100,
-  //   height: 100,
-  // },
-  // // shadowOpacity: 0.20,
-  // shadowRadius: 300,
-  // elevation: 10,
-
-  },
-  title: {
-    color: '#EF3D61',
-    fontSize: 20,
-    textAlign: 'center',
-    // fontFamily: 'SSTArabic-Light',
-    marginHorizontal: 10,
-  },
-  readingTitle: {
-    fontSize: 20,
-    textAlign: 'center',
-    // fontFamily: 'SSTArabic-Light',
-  }
-});
